@@ -7,8 +7,7 @@ def add_time(start, duration, start_day="none"):
     # Split the duration into hour and minute
     duration_split = duration.split(':', 2)
     if int(duration_split[1]) >= 60:
-        #return "Error: duration minutes should be less than 60"
-        raise ValueError("Error: Duration minutes should be less than 60")
+        return "Error: duration minutes should be less than 60"
     
     # Add minutes and determine if minutes exceed 60:
     minutes = int(duration_split[1]) + int(start_time_split[1])
@@ -38,23 +37,24 @@ def add_time(start, duration, start_day="none"):
     
     # Determining the period (AM or PM)
     hour_period = hour_military % 24
-    if hour_period <= 12:
+    if hour_period < 12:
         period = "AM"
-    if hour_period > 12:
+    if hour_period >= 12:
         period = "PM"
     if hour_period == 0:
         period = "AM"
     
     # Determining the number of days
-    days_n = 0
     if hour_military < 24:
         final_day = ""
-    if hour_military < 48 and hour_military > 24:
-        final_day = "(next day)"
-    if hour_military > 48 :
+        days_n = 0
+    if hour_military < 48 and hour_military >= 24:
+        final_day = " (next day)"
+        days_n = 1
+    if hour_military >= 48 :
         days = hour_military / 24
         days_n = str(days).split(".",2)[0]
-        final_day = f"({days_n} days later)"
+        final_day = f" ({days_n} days later)"
 
     # Indicate the day
     days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
@@ -67,14 +67,14 @@ def add_time(start, duration, start_day="none"):
         final_day_name = days[final_day_index].capitalize()
         # If end day is same as start day
         if final_day_name.lower() != start_day.lower():
-            new_time = f"{hour_final}:{minutes_final} {period}, {final_day_name} {final_day}"
+            new_time = f"{hour_final}:{minutes_final} {period}, {final_day_name}{final_day}"
         # End day is not same as start day
         else:
             new_time = f"{hour_final}:{minutes_final} {period}, {final_day_name}"
+
     # User did not give the start day
     else:
         final_day_name = ""
-        new_time = f"{hour_final}:{minutes_final} {period} {final_day}"
+        new_time = f"{hour_final}:{minutes_final} {period}{final_day}"
 
-    print(new_time)
-    #return new_time
+    return new_time
