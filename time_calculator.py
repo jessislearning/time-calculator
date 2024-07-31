@@ -45,6 +45,16 @@ def add_time(start, duration):
     if hour_period == 0:
         period = "AM"
 
+    # Determining the number of days
+    if hour_military < 24:
+        final_day = ""
+    if hour_military < 48 and hour_military > 24:
+        final_day = "(next day)"
+    if hour_military > 48 :
+        days = hour_military / 24
+        days_n = str(days).split(".",2)[0]
+        final_day = f"({days_n} days later)"
+
 
 #Uncomment when done with final code:
 
