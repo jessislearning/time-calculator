@@ -1,17 +1,16 @@
 def add_time(start, duration):
     
-    #Split the start time into hour, minute and period (AM or PM)
+    # Split the start time into hour, minute and period (AM or PM)
     start_time_reformat = start.replace(':', ' ')
-    start_time_split = start_time_reformat.split(' ', 3)
+    start_time_split = start_time_reformat.split(' ', 4)
 
-    #Split the duration into hour and minute
+    # Split the duration into hour and minute
     duration_split = duration.split(':', 2)
     if int(duration_split[1]) >= 60:
         #return "Error: duration minutes should be less than 60"
         raise ValueError("Error: Duration minutes should be less than 60")
     
-
-    #Add minutes and determine if minutes exceed 60:
+    # Add minutes and determine if minutes exceed 60:
     minutes = int(duration_split[1]) + int(start_time_split[1])
     if minutes >= 60:
         minutes_final = minutes - 60
@@ -19,37 +18,32 @@ def add_time(start, duration):
     else:
         hour_to_add = 0
         minutes_final = minutes
-    
-    #Adding hours and determining correct period
 
-    hour = int(start_time_split[0]) + int(duration_split[0]) + hour_to_add
-    hour_final = hour % 12
-    cycles_split = str(hour/12).split('.', 2)
-    cycles_whole = int(cycles_split[0])
+    if minutes_final == 0 or minutes_final < 10:
+        minutes_final = str("0")+ str(minutes_final)
     
-    if int(start_time_split[0])<12:
-        if cycles_whole % 2 == 0:
-            period = start_time_split[2]
-        if cycles_whole % 2 == 1:
-            if start_time_split[2] == "PM":
-                period = "AM"
-            if start_time_split[2] == "AM":
-                period = "PM"
-    
+    # Converting the hours into military time
+    if start_time_split[2] == "PM" and int(start_time_split[0]) < 12:
+        start_military_hour = 12 + int(start_time_split[0])
     else:
-        if cycles_whole % 2 == 1:
-            period = start_time_split[2]
-        
-        if cycles_whole % 2 == 0:
-            if start_time_split[2] == "PM":
-                period = "AM"
-            if start_time_split[2] == "AM":
-                period = "PM"
+        start_military_hour = int(start_time_split[0])
 
-# Next step is to add the days
-
-    #Print final time to check
-    print(f"Start Time: {start}\nDuration: {duration}\nCycles remainder: {cycles_whole%2} \nFinal Time: {hour_final}:{minutes_final} {period}" )
+    # Adding the hours 
+    hour_military = start_military_hour + int(duration_split[0]) + hour_to_add
+    
+    # Return to 12-hour format
+    hour_final = hour_military % 12
+    if hour_final == 0:
+        hour_final = 12
+    
+    # Determining the period (AM or PM)
+    hour_period = hour_military % 24
+    if hour_period <= 12:
+        period = "AM"
+    if hour_period > 12:
+        period = "PM"
+    if hour_period == 0:
+        period = "AM"
 
 
 #Uncomment when done with final code:
