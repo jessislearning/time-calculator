@@ -1,8 +1,8 @@
-def add_time(start, duration):
+def add_time(start, duration, start_day="none"):
     
     # Split the start time into hour, minute and period (AM or PM)
     start_time_reformat = start.replace(':', ' ')
-    start_time_split = start_time_reformat.split(' ', 4)
+    start_time_split = start_time_reformat.split(' ', 3)
 
     # Split the duration into hour and minute
     duration_split = duration.split(':', 2)
@@ -44,8 +44,9 @@ def add_time(start, duration):
         period = "PM"
     if hour_period == 0:
         period = "AM"
-
+    
     # Determining the number of days
+    days_n = 0
     if hour_military < 24:
         final_day = ""
     if hour_military < 48 and hour_military > 24:
@@ -55,12 +56,25 @@ def add_time(start, duration):
         days_n = str(days).split(".",2)[0]
         final_day = f"({days_n} days later)"
 
+    # Indicate the day
+    days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
+    # User gave the start day
+    if start_day.lower() in days:
+        start_day_index = days.index(start_day.lower())
+        final_day_index = start_day_index + int(days_n)
+        if final_day_index > 6:
+            final_day_index = final_day_index % 7 
+        final_day_name = days[final_day_index].capitalize()
+        # If end day is same as start day
+        if final_day_name.lower() != start_day.lower():
+            new_time = f"{hour_final}:{minutes_final} {period}, {final_day_name} {final_day}"
+        # End day is not same as start day
+        else:
+            new_time = f"{hour_final}:{minutes_final} {period}, {final_day_name}"
+    # User did not give the start day
+    else:
+        final_day_name = ""
+        new_time = f"{hour_final}:{minutes_final} {period} {final_day}"
 
-#Uncomment when done with final code:
-
-    #new_time = 0
-
+    print(new_time)
     #return new_time
-
-# Remove below when done with final code:
-add_time('12:00 PM', '15:10')
