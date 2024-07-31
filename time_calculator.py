@@ -1,4 +1,4 @@
-def add_time(start, duration, start_day="none"):
+def add_time(start, duration, start_day=None):
     
     # Split the start time into hour, minute and period (AM or PM)
     start_time_reformat = start.replace(':', ' ')
@@ -59,11 +59,9 @@ def add_time(start, duration, start_day="none"):
     # Indicate the day
     days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
     # User gave the start day
-    if start_day.lower() in days:
+    if start_day:
         start_day_index = days.index(start_day.lower())
-        final_day_index = start_day_index + int(days_n)
-        if final_day_index > 6:
-            final_day_index = final_day_index % 7 
+        final_day_index = (start_day_index + int(days_n))%7
         final_day_name = days[final_day_index].capitalize()
         # If end day is same as start day
         if final_day_name.lower() != start_day.lower():
